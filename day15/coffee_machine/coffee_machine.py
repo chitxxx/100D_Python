@@ -1,6 +1,5 @@
 from menu import MENU, resources
 
-
 # TODO: 1
 def serve_user():
     request = input("What would you like? (espresso/latte/cappuccino)")
