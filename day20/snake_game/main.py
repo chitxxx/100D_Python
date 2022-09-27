@@ -9,7 +9,8 @@ screen.title("Snaking")
 screen.tracer(0)
 
 # initalize snake
-STARTING_POSITION = [(-20, 0), (0, 0), (20, 0)]
+UNIT_SIZE = 20
+STARTING_POSITION = [(-UNIT_SIZE, 0), (0, 0), (UNIT_SIZE, 0)]
 
 
 class SnakeDot(Turtle):
@@ -31,7 +32,7 @@ def move_snake(snake):
     print(snake_len)
     for dot in range(snake_len-1, 0, -1):
         snake[dot].goto(snake[dot-1].pos())
-    snake[0].forward(20)
+    snake[0].forward(UNIT_SIZE)
     screen.update()
 
 def turn_left():
