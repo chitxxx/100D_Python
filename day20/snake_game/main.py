@@ -1,5 +1,10 @@
 from turtle import Turtle, Screen
+from snake import Snake
 import time
+
+# initalize environment
+UNIT_SIZE = 20
+
 
 # intialize screen
 screen = Screen()
@@ -8,46 +13,20 @@ screen.bgcolor("black")
 screen.title("Snaking")
 screen.tracer(0)
 
-# initalize snake
-UNIT_SIZE = 20
-STARTING_POSITION = [(-UNIT_SIZE, 0), (0, 0), (UNIT_SIZE, 0)]
-
-
-class SnakeDot(Turtle):
-    def __init__(self):
-        Turtle.__init__(self)
-        self.shape("square")
-        self.color("white")
-        self.penup()
-
-
-snake = [SnakeDot() for _ in range(3)]
-for i in range(3):
-    snake[i].goto(*STARTING_POSITION[i])
+snake = Snake()
 screen.update()
 
-# move snake:
-def move_snake(snake):
-    snake_len = len(snake)
-    print(snake_len)
-    for dot in range(snake_len-1, 0, -1):
-        snake[dot].goto(snake[dot-1].pos())
-    snake[0].forward(UNIT_SIZE)
-    screen.update()
-
-def turn_left():
-    snake[0].left(90)
-
-def turn_right():
-    snake[0].right(90)
-
-screen.onkeypress(turn_left, 'a')
-screen.onkeypress(turn_right, 'd')
+screen.onkeypress(snake.face_up, 'Up')
+screen.onkeypress(snake.face_down, 'Down')
+screen.onkeypress(snake.face_left, 'Left')
+screen.onkeypress(snake.face_right, 'Right')
 screen.listen()
 
+is_game_on = True
 
-while True:
-    move_snake(snake)
+while is_game_on:
     time.sleep(0.1)
+    snake.move()
+    screen.update()
 
 screen.exitonclick()
