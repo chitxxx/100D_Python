@@ -9,10 +9,12 @@ SCORE = 0
 ALIGNMENT = "center"
 FONT = ("Arial", 15, 'normal', 'bold')
 
+
 class ScoreBoard(Turtle):
-    def __init__(self):
+    def __init__(self, high_score=0):
         super().__init__()
         self.score = 0
+        self.high_score = high_score
         self.color("black")
         self.pencolor("white")
         self.penup()
@@ -20,12 +22,12 @@ class ScoreBoard(Turtle):
         self.write_score()
 
     def write_score(self):
-        self.write(f"SCORE: {self.score}",
+        self.write(f"SCORE: {self.score} | HIGH SCORE: {self.high_score}",
                    align=ALIGNMENT,
                    font=FONT)
 
     def increase_score(self):
-        self.score+=1
+        self.score += 1
         self.clear()
         self.write_score()
 
@@ -34,4 +36,3 @@ class ScoreBoard(Turtle):
         self.write(f"GAME OVER...",
                    align=ALIGNMENT,
                    font=FONT)
-

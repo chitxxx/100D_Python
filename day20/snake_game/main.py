@@ -7,6 +7,10 @@ import time
 # initalize environment
 UNIT_SIZE = 20
 
+# detect_high_score
+with open('high_score.txt') as f:
+    high_score = f.readlines()[0]
+
 # intialize screen
 screen = Screen()
 screen.setup(height=600, width=600)
@@ -15,7 +19,7 @@ screen.title("Snaking")
 screen.tracer(0)
 
 food = Food()
-score_board = ScoreBoard()
+score_board = ScoreBoard(high_score)
 snake = Snake()
 screen.update()
 
@@ -54,6 +58,9 @@ while is_game_on:
     if snake.check_dead():
         is_game_on = False
     screen.update()
+
+with open('high_score.txt', 'w') as f:
+    f.writelines([str(score_board.score)])
 
 score_board.game_over()
 screen.update()
