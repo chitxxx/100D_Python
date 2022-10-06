@@ -11,6 +11,7 @@ class Ball(Turtle):
         self.restart()
 
     def restart(self):
+        self.goto(0,0)
         random_direction = random.randrange(0, 360)
         self.setheading(random_direction)
         self.move()

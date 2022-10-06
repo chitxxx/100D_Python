@@ -17,17 +17,24 @@ class Paddle:
                  starting_x=0,
                  starting_y=0):
         self.body = [PaddleDot() for _ in range(size)]
-        for pos in range(size):
+        self.starting_x = starting_x
+        self.starting_y = starting_y
+        self.size = size
+        for pos in range(self.size):
             self.body[pos].goto(starting_x, starting_y*pos-pos*UNIT_SIZE)
 
-    def move(self):
-        for dot in self.body:
-            dot.forward(UNIT_SIZE)
 
     def move_up(self):
         for dot in self.body:
             dot.setheading(90)
+            dot.forward(UNIT_SIZE)
 
     def move_down(self):
         for dot in self.body:
             dot.setheading(270)
+            dot.forward(UNIT_SIZE)
+
+    def reset(self):
+        for pos in range(self.size):
+            self.body[pos].goto(self.starting_x, self.starting_y*pos-pos*UNIT_SIZE)
+

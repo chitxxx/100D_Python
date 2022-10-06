@@ -5,6 +5,7 @@ from config import (SCREEN_HEIGHT,
                     SCREEN_WIDTH)
 from paddle import Paddle
 from ball import Ball
+from score_board import ScoreBoard
 
 # initalize environment
 UNIT_SIZE = 10
@@ -27,6 +28,8 @@ right_paddle = Paddle(starting_x=X_RIGHT_BOUND - 3 * UNIT_SIZE)
 # define ball
 ball = Ball()
 
+score_board = ScoreBoard()
+
 
 def wall_collision(ball):
     x_ball, y_ball = ball.pos()
@@ -35,8 +38,22 @@ def wall_collision(ball):
     if y_ball <= Y_BOTTOM_BOUND:
         ball.bounce(hit_direction="bottom")
     if x_ball >= X_RIGHT_BOUND:
-        ball.bounce(hit_direction="right")
+        score_board.update_score("left")
+        time.sleep(0.2)
+        left_paddle.reset()
+        right_paddle.reset()
+        ball.restart()
     if x_ball <= X_LEFT_BOUND:
+        score_board.update_score("right")
+        time.sleep(0.2)
+        left_paddle.reset()
+        right_paddle.reset()
+        ball.restart()
+
+def paddle_collision(ball, left_paddle, right_paddle):
+    if min([dot.distance(ball) for dot in left_paddle.body]) <=10:
+        ball.bounce(hit_direction="right")
+    if min([dot.distance(ball) for dot in right_paddle.body]) <=10:
         ball.bounce(hit_direction="left")
 
 screen.update()
@@ -51,9 +68,8 @@ screen.listen()
 
 while is_game_on:
     time.sleep(0.1)
-    left_paddle.move()
-    right_paddle.move()
     wall_collision(ball)
+    paddle_collision(ball, left_paddle, right_paddle)
     ball.move()
     screen.update()
 
