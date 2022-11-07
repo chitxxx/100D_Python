@@ -6,6 +6,7 @@ from tkinter import (Tk,
                      Button,
                      messagebox)
 import random
+import json
 
 # ---------------------------- UI SETUP ------------------------------- #
 
@@ -24,6 +25,7 @@ canvas.create_image(100, 100, image=background_img)
 # create website row
 lable_website = Label(text="Website")
 entry_website = Entry(width=35)
+button_search = Button(text="Search Password")
 
 # create username row
 lable_username = Label(text="Email/Username")
@@ -41,7 +43,8 @@ button_add = Button(text="Add", width=36)
 canvas.grid(row=1, column=2)
 
 lable_website.grid(row=2, column=1)
-entry_website.grid(row=2, column=2, columnspan=2)
+entry_website.grid(row=2, column=2)
+button_search.grid(row=2, column=3)
 
 lable_username.grid(row=3, column=1)
 entry_username.grid(row=3, column=2, columnspan=2)
@@ -85,9 +88,10 @@ def generate_password():
     password = ""
     for char in password_list:
         password += char
-        
+
     entry_password.delete(0, 'end')
     entry_password.insert(0, password)
+
 
 button_password.config(command=generate_password)
 
@@ -120,8 +124,18 @@ def save_password():
                                message="Invalid Password")
         return
 
-    with open("data.txt", "a") as datafile:
-        datafile.write(f"{website} | {username} | {password} \n")
+    new_data = {website: {"username": username,
+                          "password": password}}
+    try:
+        with open("data.json", "r") as datafile:
+            data = json.load(datafile)
+            data.update(new_data)
+    except FileNotFoundError:
+        with open("data.json", "w") as datafile:
+            json.dump(new_data, datafile, indent=4)
+    else:
+        with open("data.json", "w") as datafile:
+            json.dump(data, datafile, indent=4)
 
     entry_website.delete(0, 'end')
     entry_username.delete(0, 'end')
@@ -133,5 +147,31 @@ def save_password():
 
 
 button_add.config(command=save_password)
+
+# ---------------------------- SEARCH PASSWORD ------------------------------- #
+def search_password():
+    # load saved data
+    try:
+        with open("data.json", "r") as datafile:
+            data = json.load(datafile)
+    except FileNotFoundError:
+        data = dict()
+
+    # fill password
+    website = entry_website.get()
+    try:
+        username = data[website]["username"]
+        password = data[website]["password"]
+    except KeyError:
+        messagebox.showwarning(title="No Saved Password",
+                               message="No Saved Password")
+    else:
+        entry_username.delete(0, 'end')
+        entry_password.delete(0, 'end')
+        entry_username.insert(0, username)
+        entry_password.insert(0, password)
+
+
+button_search.config(command=search_password)
 
 window.mainloop()
